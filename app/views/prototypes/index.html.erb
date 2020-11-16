@@ -2,6 +2,7 @@
   <div class="inner">
     <%# ログインしているときは以下を表示する %> 
     <%# if文で囲むとログアウトできた、ないとcurrent_user.nameがnullになって表示できない %>
+    <% if user_signed_in?%>
       <div class="greeting">こんにちは、
          <span><%= link_to "#{current_user.name}さん", root_path, class: :greeting__link%></span>
       </div>
