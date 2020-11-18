@@ -34,8 +34,9 @@ def edit
 end
 
 def update
-  prototype = Prototype.find(params[:id])
-  if prototype.update(prototype_params)
+  # prototypeをインスタンス変数に変換
+  @prototype = Prototype.find(params[:id])
+  if @prototype.update(prototype_params)
     redirect_to root_path
   else
     render :edit
