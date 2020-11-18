@@ -1,4 +1,8 @@
 class PrototypesController < ApplicationController
+  # except以外がおきるとログインページに飛ぶ
+  before_action :authenticate_user!, except: [:index, :new, :show, :create, :edit]
+  before_action :move_to_index, only: :edit 
+
   def index
     @prototypes = Prototype.all
   end
@@ -19,6 +23,10 @@ class PrototypesController < ApplicationController
 
 def show
   @prototype = Prototype.find(params[:id])
+  @comment = Comment.new
+  # includesメソッドは、引数に指定された関連モデルを1度のアクセスでまとめて取得できます。
+  @comments = @prototype.comments.includes(:user)
+
 end
 
 def edit
@@ -49,5 +57,12 @@ end
     params.require(:prototype).permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
   end
   
+#@prototypeがnilとでて空だとなっていたので下で定義して与えた
+  def move_to_index
+    @prototype = Prototype.find(params[:id])
+    unless  user_signed_in? && current_user.id == @prototype.user_id
+      redirect_to action: :index
+    end
+  end
 
 end
